@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta tags for character encoding and responsive viewport -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suhi - AI College Assistant</title>
+  <!-- Favicon for the browser tab -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADPSURBVFhH7ZaxCYAwEEW9g3+BX+C3cAM3cANb3MBG7uAObuAGbsAIaWQUwUjYk/4kSTLsCyF+BEABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAVQAVQAFUAFUAFUABVABVABVAAVQAFeAP4A4z1j5Q9VJ8AAAAASUVORK5CYII=">
+  <!-- Tailwind CSS CDN for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Marked.js for parsing markdown in bot responses -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <!-- Tailwind configuration for custom theme -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#8B5CF6', // Primary purple color
+            'secondary': '#14B8A6', // Secondary teal color
+            'dark': '#0F172A', // Dark background color
+            'light': '#F8FAFC', // Light background color
+            'user-bg': '#3B82F6', // User message background
+            'bot-bg': '#F3F4F6', // Bot message background
+            'pink-tick': '#FF69B4', // Pink color for read ticks
+            'color': '#FF69B4' // Additional color for styling
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out', // Fade-in animation
+            'slide-up': 'slideUp 0.3s ease-out', // Slide-up animation
+            'pulse-glow': 'pulseGlow 2s infinite', // Pulsing glow effect
+            'typing': 'typing 1.5s infinite' // Typing indicator animation
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(100%)' },
+              '100%': { transform: 'translateY(0)' }
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' },
+              '50%': { boxShadow: '0 0 30px rgba(139, 92, 246, 0.6)' }
+            },
+            typing: {
+              '0%, 60%': { opacity: '1' },
+              '61%, 100%': { opacity: '0' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts for Inter font family -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-dark via-slate-900 to-slate-800 text-white min-h-screen overflow-hidden dark-theme">
+  <!-- Background decorative effects -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary/10 blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-secondary/10 blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-r from-primary/5 to-secondary/5 blur-3xl"></div>
+  </div>
+
+  <!-- Header section -->
+  <header class="relative z-10 bg-black/20 backdrop-blur-xl border-b border-white/10">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <!-- Logo with animation -->
+          <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-xl flex items-center justify-center animate-pulse-glow">
+            <img src="logo.png" alt="Suhi Logo" class="w-6 h-6" style="width: 100%; height: 100%;">
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Suhi</h1>
+            <p class="text-xs text-gray-400">AI-Powered College Assistant -- Developed by Connecto Shivam</p>
+          </div>
+        </div>
+        <!-- Status indicator and theme toggle -->
+        <div class="flex items-center space-x-2">
+          <button id="themeToggle" class="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200">
+            <i class="fas fa-moon text-gray-400"></i>
+          </button>
+          <button id="remindersBtn" class="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200">
+            <i class="fas fa-bell text-gray-400"></i>
+          </button>
+          <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span class="text-sm text-gray-300">Online</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main chat interface -->
+  <main class="relative z-10 flex flex-col h-screen pt-20 pb-24">
+    <!-- Chat messages container -->
+    <div id="chat-container" class="flex-1 overflow-y-auto px-4 pb-28 space-y-4 scrollbar-thin scrollbar-thumb-primary/50 scrollbar-track-dark">
+      <!-- Welcome message -->
+      <div class="flex justify-center mb-8">
+        <div class="bg-black/30 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md text-center animate-fade-in">
+          <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Poochho.. apni Suhi se....!</h3>
+          <p class="text-gray-400 text-sm">Your AI-powered assistant By Connecto Shivam for Dumka Engineering College and general queries. Ask about courses, facilities, placements, or anything else! 😊</p>
+        </div>
+      </div>
+      <!-- Quick action buttons -->
+      <div class="flex justify-center mb-6">
+        <div class="flex flex-wrap gap-2 max-w-2xl">
+          <button onclick="sendQuickMessage('Show my today schedule')" class="quick-action-btn">
+            <i class="fas fa-calendar mr-2"></i>Today's Schedule
+          </button>
+          <button onclick="sendQuickMessage('Tell me about college facilities')" class="quick-action-btn">
+            <i class="fas fa-building mr-2"></i>Facilities
+          </button>
+          <button onclick="sendQuickMessage('What are the placement statistics?')" class="quick-action-btn">
+            <i class="fas fa-chart-line mr-2"></i>Placements
+          </button>
+          <button onclick="sendQuickMessage('Tell me about admission process')" class="quick-action-btn">
+            <i class="fas fa-user-graduate mr-2"></i>Admissions
+          </button>
+          <button onclick="sendQuickMessage('I want to do a quick health check')" class="quick-action-btn">
+            <i class="fas fa-heartbeat mr-2"></i>Health Check
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat input area -->
+    <div class="fixed bottom-0 left-0 right-0 bg-black/20 backdrop-blur-xl border-t border-white/10 p-4">
+      <div class="container mx-auto max-w-4xl">
+        <div class="flex items-end space-x-3">
+          <!-- File upload input -->
+          <div class="file-upload">
+            <input type="file" id="imageInput" accept="image/*,application/pdf,.doc,.docx">
+            <label for="imageInput" class="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 group cursor-pointer">
+              <i class="fas fa-paperclip text-gray-400 group-hover:text-white"></i>
+            </label>
+          </div>
+          <!-- Message input textarea -->
+          <div class="flex-1 relative">
+            <textarea 
+              id="message-input" 
+              placeholder="Ask anything from -- Your Suhi :)"
+              rows="1"
+              class="w-full px-4 py-3 pr-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+              style="max-height: 120px;"
+            ></textarea>
+            <!-- Typing indicator -->
+            <div id="typing-indicator" class="absolute bottom-2 right-3 hidden">
+              <div class="flex space-x-1">
+                <div class="w-1 h-1 bg-primary rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                <div class="w-1 h-1 bg-primary rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                <div class="w-1 h-1 bg-primary rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Send button -->
+          <button 
+            id="send-button" 
+            onclick="sendMessage()"
+            class="p-3 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-paper-plane text-white"></i>
+          </button>
+          <!-- Voice input button -->
+          <button class="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 group">
+            <i class="fas fa-microphone text-gray-400 group-hover:text-white"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminders modal -->
+    <div id="remindersModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+      <div class="bg-dark rounded-2xl p-6 max-w-md w-full border border-white/10">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">Your Reminders</h3>
+          <button onclick="closeRemindersModal()" class="p-2 bg-white/10 rounded-xl">
+            <i class="fas fa-times text-gray-400"></i>
+          </button>
+        </div>
+        <div id="remindersList" class="space-y-2"></div>
+        <div class="mt-4 text-center">
+          <button onclick="clearReminders()" class="px-4 py-2 bg-red-500/80 hover:bg-red-500 rounded-xl text-white transition-all duration-200">
+            Clear All Reminders
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification toast -->
+  <div id="notification" class="fixed top-4 right-4 bg-black/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 transform translate-x-full transition-transform duration-300 z-50">
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-bell text-secondary"></i>
+      <span id="notification-text">Notification</span>
+    </div>
+    <button onclick="dismissNotification()" class="absolute top-2 right-2 p-1 bg-white/10 rounded-full">
+      <i class="fas fa-times text-gray-400"></i>
+    </button>
+  </div>
+
+  <!-- External JavaScript file -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>

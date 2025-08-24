@@ -1,0 +1,215 @@
+/* CSS Variables for theming */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #1a1a24;
+  --bg-tertiary: #2a2a38;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8d1;
+  --text-muted: #8e8ea9;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-primary: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --shadow-secondary: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Light theme variables */
+.light-theme {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-primary: 0 20px 40px rgba(0, 0, 0, 0.1);
+  --shadow-secondary: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Styling for quick action buttons */
+.quick-action-btn {
+  @apply px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm transition-all duration-200 border border-white/10 hover:border-white/20 backdrop-blur-sm;
+}
+
+/* Message bubble styling */
+.message-bubble {
+  @apply max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl break-words;
+}
+
+/* User message styling */
+.user-message {
+  @apply text-white ml-auto bg-user-bg;
+}
+
+/* Bot message styling */
+.bot-message {
+  @apply text-gray-900 mr-auto bg-bot-bg border border-gray-200;
+}
+
+/* Custom scrollbar styling */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) #0F172A;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #0F172A;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+/* Textarea styling for content-based sizing */
+textarea {
+  field-sizing: content;
+}
+
+/* Hide file input, show styled label */
+.file-upload input {
+  display: none;
+}
+
+/* Medical interface styling */
+.medical-container {
+  background: var(--success-gradient);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px 0;
+  color: white;
+}
+
+.medical-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.medical-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.symptoms-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.symptom-tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.symptom-tag:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Schedule container styling */
+.schedule-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.schedule-day {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: var(--bg-tertiary);
+  transition: all 0.2s ease;
+}
+
+.schedule-item:hover {
+  background: var(--primary-gradient);
+  color: white;
+  transform: translateX(4px);
+}
+
+.schedule-time {
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.schedule-details {
+  flex: 1;
+  margin-left: 16px;
+}
+
+.schedule-subject {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.schedule-teacher {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Read ticks styling */
+.read-ticks {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--primary);
+}
+
+.read-ticks.read .read-ticks {
+  color: var(--pink-tick);
+}
+
+.read-ticks i {
+  font-size: 10px;
+}
+
+/* Heart reaction styling */
+.heart-reaction {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--pink-tick);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 90%;
+  }
+  .quick-action-btn {
+    @apply px-3 py-1 text-xs;
+  }
+}
